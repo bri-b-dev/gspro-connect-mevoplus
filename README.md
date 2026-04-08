@@ -1,18 +1,18 @@
 # @bri-b-dev/gspro-connect-mevoplus
 
-FlightScope Mevo+ Direktverbindung für Expo / React Native.  
-Kein Umweg über die FS Golf App — TCP direkt auf Port 5100.
+Direct connection to the FlightScope Mevo+ for Expo / React Native.  
+No detour through the FS Golf app — TCP straight to port 5100.
 
 ## Installation
 
 ```bash
-# 1. Library aus Git installieren
-npm install git+https://github.com/bri-b-dev/gspro-connect-mevoplus.git
+# 1. Install the library from Git
+npm install git+https://github.com/your-name/mevoplus.git
 
-# 2. Peer-Dependency installieren
+# 2. Install the peer dependency
 npx expo install react-native-tcp-socket
 
-# 3. Config Plugin in app.json / app.config.js eintragen
+# 3. Add the config plugin to app.json / app.config.js
 ```
 
 ```json
@@ -23,13 +23,13 @@ npx expo install react-native-tcp-socket
 }
 ```
 
-> ⚠ **react-native-tcp-socket** braucht nativen Code.  
-> Expo Go funktioniert **nicht** — Development Build verwenden:  
-> `eas build --profile development` oder `npx expo run:ios`
+> ⚠ **react-native-tcp-socket** requires native code.  
+> Expo Go will **not** work — use a development build:  
+> `eas build --profile development` or `npx expo run:ios`
 
-## Verwendung
+## Usage
 
-### Mit dem React Hook (empfohlen)
+### With the React hook (recommended)
 
 ```tsx
 import { useMevo, useShotStats, spinBias } from '@bri-b-dev/gspro-connect-mevoplus';
@@ -49,9 +49,9 @@ export function TrainingScreen() {
     <View>
       <Text>Status: {state}</Text>
 
-      <Button title="Verbinden" onPress={connect} />
-      <Button title="Arm"       onPress={arm} />
-      <Button title="Disarm"    onPress={disarm} />
+      <Button title="Connect" onPress={connect} />
+      <Button title="Arm"     onPress={arm} />
+      <Button title="Disarm"  onPress={disarm} />
 
       {lastShot && (
         <View>
@@ -70,14 +70,14 @@ export function TrainingScreen() {
       )}
 
       {stats && (
-        <Text>Session: {stats.count} Schläge | Ø Carry {stats.avgCarry.toFixed(0)} yds</Text>
+        <Text>Session: {stats.count} shots | avg carry {stats.avgCarry.toFixed(0)} yds</Text>
       )}
     </View>
   );
 }
 ```
 
-### Direkt mit MevoClient (für komplexere Flows)
+### Directly with MevoClient (for more complex flows)
 
 ```ts
 import { MevoClient, ShotMode } from '@bri-b-dev/gspro-connect-mevoplus';
@@ -91,10 +91,10 @@ await client.connect();
 await client.configure();
 await client.arm();
 
-// Modus wechseln
+// Switch mode
 await client.setMode(ShotMode.Chip);
 
-// Sauber beenden
+// Clean shutdown
 await client.disconnect();
 ```
 
@@ -102,55 +102,55 @@ await client.disconnect();
 
 ### `useMevo(options?)`
 
-| Option      | Typ                      | Default        | Beschreibung                            |
-|-------------|--------------------------|----------------|-----------------------------------------|
-| `host`      | `string`                 | `192.168.2.1`  | IP-Adresse des Mevo+                    |
-| `port`      | `number`                 | `5100`         | TCP-Port                                |
-| `config`    | `Partial<DeviceConfig>`  | Standardwerte  | Gerätekonfiguration                     |
-| `autoArm`   | `boolean`                | `false`        | Sofort nach `connect()` armen           |
-| `maxShots`  | `number`                 | `100`          | Maximale Schläge im State               |
+| Option      | Type                     | Default        | Description                              |
+|-------------|--------------------------|----------------|------------------------------------------|
+| `host`      | `string`                 | `192.168.2.1`  | IP address of the Mevo+                  |
+| `port`      | `number`                 | `5100`         | TCP port                                 |
+| `config`    | `Partial<DeviceConfig>`  | defaults       | Device configuration                     |
+| `autoArm`   | `boolean`                | `false`        | Arm immediately after `connect()`        |
+| `maxShots`  | `number`                 | `100`          | Maximum shots kept in state              |
 
 ### `ShotData`
 
-| Feld                    | Vorhanden     | Beschreibung                        |
-|-------------------------|---------------|-------------------------------------|
-| `ballSpeedMph`          | immer         |                                     |
-| `verticalLaunchAngle`   | immer         | °                                   |
-| `horizontalLaunchAngle` | immer         | °                                   |
-| `totalSpin`             | immer         | rpm                                 |
-| `spinAxis`              | immer         | ° — negativ = Draw, positiv = Fade  |
-| `carryDistanceYards`    | immer         |                                     |
-| `isEstimatedSpin`       | immer         | true = kein RPT-Ball / kein Sticker |
-| `hasClubData`           | immer         | Flag ob Club-Felder befüllt         |
-| `clubSpeedMph`          | Pro Package   |                                     |
-| `angleOfAttack`         | Pro Package   | °                                   |
-| `clubPath`              | Pro Package   | °                                   |
-| `faceToTarget`          | Pro Package   | °                                   |
-| `dynamicLoft`           | Pro Package   | °                                   |
-| `spinLoft`              | Pro Package   | °                                   |
-| `hasFaceImpact`         | immer         | Flag ob FIL-Felder befüllt          |
-| `faceImpactX`           | FIL Add-on    | mm horizontal vom Zentrum           |
-| `faceImpactY`           | FIL Add-on    | mm vertikal vom Zentrum             |
+| Field                   | Available     | Description                          |
+|-------------------------|---------------|--------------------------------------|
+| `ballSpeedMph`          | always        |                                      |
+| `verticalLaunchAngle`   | always        | °                                    |
+| `horizontalLaunchAngle` | always        | °                                    |
+| `totalSpin`             | always        | rpm                                  |
+| `spinAxis`              | always        | ° — negative = draw, positive = fade |
+| `carryDistanceYards`    | always        |                                      |
+| `isEstimatedSpin`       | always        | true = no RPT ball / no sticker      |
+| `hasClubData`           | always        | flag indicating club fields are set  |
+| `clubSpeedMph`          | Pro Package   |                                      |
+| `angleOfAttack`         | Pro Package   | °                                    |
+| `clubPath`              | Pro Package   | °                                    |
+| `faceToTarget`          | Pro Package   | °                                    |
+| `dynamicLoft`           | Pro Package   | °                                    |
+| `spinLoft`              | Pro Package   | °                                    |
+| `hasFaceImpact`         | always        | flag indicating FIL fields are set   |
+| `faceImpactX`           | FIL add-on    | mm horizontal from center            |
+| `faceImpactY`           | FIL add-on    | mm vertical from center              |
 
 ### `useShotStats(shots)`
 
-Gibt `ShotStats | null` zurück (null wenn `shots` leer).  
-Felder: `count`, `avgBallSpeed`, `avgCarry`, `avgSpin`, `avgSpinAxis`,
+Returns `ShotStats | null` (null if `shots` is empty).  
+Fields: `count`, `avgBallSpeed`, `avgCarry`, `avgSpin`, `avgSpinAxis`,
 `avgAoA`, `avgClubPath`, `avgFaceToTarget`, `drawPercentage`.
 
-## Protokoll-Hinweis
+## Protocol note
 
-Das Binärprotokoll auf Port 5100 ist nicht offiziell von FlightScope dokumentiert.
-Die Byte-Offsets basieren auf Community-Reverse-Engineering. Beim ersten
-Test mit echtem Gerät empfiehlt sich ein Debug-Log um gegen die FS Golf App
-zu verifizieren — siehe Go-Referenzimplementierung.
+The binary protocol on port 5100 is not officially documented by FlightScope.
+The byte offsets are based on community reverse engineering. When testing with
+a real device for the first time, adding a debug log and cross-referencing
+against the FS Golf app is recommended — see the Go reference implementation.
 
-## Entwicklung
+## Development
 
 ```bash
 npm install
-npm run build   # kompiliert src/ → dist/
+npm run build   # compiles src/ → dist/
 ```
 
-Nach Änderungen in der Library: in der App `npm install` erneut ausführen
-(oder `npm install git+https://...#commit-hash` für einen bestimmten Stand).
+After making changes to the library, re-run `npm install` in your app
+(or use `npm install git+https://...#commit-hash` to pin a specific commit).
