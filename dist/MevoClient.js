@@ -13,6 +13,7 @@ exports.MevoClient = void 0;
 const react_native_tcp_socket_1 = __importDefault(require("react-native-tcp-socket"));
 const eventemitter3_1 = require("eventemitter3");
 const protocol_1 = require("./protocol");
+const react_native_1 = require("react-native");
 // ── MevoClient ───────────────────────────────────────────────────────────────
 class MevoClient extends eventemitter3_1.EventEmitter {
     constructor(host = protocol_1.MEVO_HOST, port = protocol_1.MEVO_PORT, cfg = {}) {
@@ -38,7 +39,10 @@ class MevoClient extends eventemitter3_1.EventEmitter {
                 return;
             }
             this._setState('connecting');
-            this.socket = react_native_tcp_socket_1.default.createConnection({ host: this.host, port: this.port }, () => {
+            const connectionOptions = react_native_1.Platform.OS === 'android'
+                ? { host: this.host, port: this.port, interface: 'wifi' }
+                : { host: this.host, port: this.port };
+            this.socket = react_native_tcp_socket_1.default.createConnection(connectionOptions, () => {
                 this._setState('connected');
                 this._startHeartbeat();
                 this.emit('connected');

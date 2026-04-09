@@ -52,10 +52,17 @@ function useMevo(options = {}) {
         if (!c)
             return;
         setError(null);
-        await c.connect();
-        await c.configure();
-        if (autoArm)
-            await c.arm();
+        setState('connecting');
+        try {
+            await c.connect();
+            await c.configure();
+            if (autoArm)
+                await c.arm();
+        }
+        catch (err) {
+            setState('disconnected');
+            throw err;
+        }
     }, [autoArm]);
     const disconnect = (0, react_1.useCallback)(() => { var _a, _b; return (_b = (_a = clientRef.current) === null || _a === void 0 ? void 0 : _a.disconnect()) !== null && _b !== void 0 ? _b : Promise.resolve(); }, []);
     const arm = (0, react_1.useCallback)(() => { var _a, _b; return (_b = (_a = clientRef.current) === null || _a === void 0 ? void 0 : _a.arm()) !== null && _b !== void 0 ? _b : Promise.resolve(); }, []);

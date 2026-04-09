@@ -22,6 +22,7 @@ import {
   splitPackets,
   parseShotData,
 } from './protocol';
+import { Platform } from 'react-native';
 
 // ── Typen ────────────────────────────────────────────────────────────────────
 
@@ -78,16 +79,16 @@ export class MevoClient extends EventEmitter<MevoClientEvents> {
         return;
       }
       this._setState('connecting');
-
-      this.socket = TcpSocket.createConnection(
-        { host: this.host, port: this.port },
-        () => {
-          this._setState('connected');
-          this._startHeartbeat();
-          this.emit('connected');
-          resolve();
-        },
-      );
+      const connectionOptions =
+          Platform.OS === 'android'
+            ? { host: this.host, port: this.port, interface: 'wifi' as const }
+            : { host: this.host, port: this.port };
+      this.socket = TcpSocket.createConnection(connectionOptions, () => {
+        this._setState('connected');
+        this._startHeartbeat();
+        this.emit('connected');
+        resolve();
+      });
       // Verbindungs-Timeout manuell setzen (timeout ist kein ConnectionOptions-Feld)
       this.socket.setTimeout(10_000);
 

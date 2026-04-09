@@ -1,6 +1,6 @@
 {
   "name": "@bri-b-dev/gspro-connect-mevoplus",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "FlightScope Mevo+ Direktverbindung für Expo / React Native",
   "license": "MIT",
 

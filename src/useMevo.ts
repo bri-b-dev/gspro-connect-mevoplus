@@ -86,9 +86,16 @@ export function useMevo(options: UseMevoOptions = {}): UseMevoReturn {
     const c = clientRef.current;
     if (!c) return;
     setError(null);
-    await c.connect();
-    await c.configure();
-    if (autoArm) await c.arm();
+    setState('connecting');
+
+    try {
+      await c.connect();
+      await c.configure();
+      if (autoArm) await c.arm();
+    } catch (err) {
+      setState('disconnected');
+      throw err;
+    }
   }, [autoArm]);
 
   const disconnect = useCallback(() => clientRef.current?.disconnect() ?? Promise.resolve(), []);
