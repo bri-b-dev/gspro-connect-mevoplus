@@ -7,7 +7,7 @@ No detour through the FS Golf app — TCP straight to port 5100.
 
 ```bash
 # 1. Install the library from Git
-npm install git+https://github.com/your-name/mevoplus.git
+npm install git+https://github.com/bri-b-dev/gspro-connect-mevoplus.git
 
 # 2. Install the peer dependency
 npx expo install react-native-tcp-socket
